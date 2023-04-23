@@ -19,6 +19,11 @@ class AuthorizationRequest extends CommonRequestDetails
     bool preferEphemeralSession = false,
     String? nonce,
     String? responseMode,
+
+    ///
+    /// NEW VAR(s)
+    ///
+    String? state,
   }) {
     this.clientId = clientId;
     this.redirectUrl = redirectUrl;
@@ -33,6 +38,11 @@ class AuthorizationRequest extends CommonRequestDetails
     this.preferEphemeralSession = preferEphemeralSession;
     this.nonce = nonce;
     this.responseMode = responseMode;
+
+    ///
+    /// NEW VAR(s)
+    ///
+    this.state = state;
     assertConfigurationInfo();
   }
 }

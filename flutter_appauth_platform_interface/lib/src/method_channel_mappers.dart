@@ -8,7 +8,8 @@ import 'grant_types.dart';
 import 'token_request.dart';
 
 Map<String, Object?> _convertCommonRequestDetailsToMap(
-    CommonRequestDetails commonRequestDetails) {
+  CommonRequestDetails commonRequestDetails,
+) {
   return <String, Object?>{
     'clientId': commonRequestDetails.clientId,
     'issuer': commonRequestDetails.issuer,
@@ -41,7 +42,9 @@ extension EndSessionRequestMapper on EndSessionRequest {
 extension AuthorizationRequestParameters on AuthorizationRequest {
   Map<String, Object?> toMap() {
     return _convertAuthorizationParametersToMap(this)
-      ..addAll(_convertCommonRequestDetailsToMap(this));
+      ..addAll(
+        _convertCommonRequestDetailsToMap(this),
+      );
   }
 }
 
@@ -65,7 +68,9 @@ extension TokenRequestMapper on TokenRequest {
 extension AuthorizationTokenRequestMapper on AuthorizationTokenRequest {
   Map<String, Object?> toMap() {
     return _convertTokenRequestToMap(this)
-      ..addAll(_convertAuthorizationParametersToMap(this));
+      ..addAll(
+        _convertAuthorizationParametersToMap(this),
+      );
   }
 }
 
@@ -91,15 +96,24 @@ String? _inferGrantType(TokenRequest tokenRequest) {
   }
 
   throw ArgumentError.value(
-      null, 'grantType', 'Grant type not specified and cannot be inferred');
+    null,
+    'grantType',
+    'Grant type not specified and cannot be inferred',
+  );
 }
 
 Map<String, Object?> _convertAuthorizationParametersToMap(
-    AuthorizationParameters authorizationParameters) {
+  AuthorizationParameters authorizationParameters,
+) {
   return <String, Object?>{
     'loginHint': authorizationParameters.loginHint,
     'promptValues': authorizationParameters.promptValues,
     'preferEphemeralSession': authorizationParameters.preferEphemeralSession,
     'responseMode': authorizationParameters.responseMode,
+
+    ///
+    /// NEW VAR(s)
+    ///
+    'state': authorizationParameters.state,
   };
 }

@@ -31,6 +31,11 @@ void main() {
           'someRedirectUrl',
           discoveryUrl: 'someDiscoveryUrl',
           loginHint: 'someLoginHint',
+
+          ///
+          /// NEW VAR(s)
+          ///
+          state: 'abcdefg',
         ),
       );
       expect(
@@ -44,6 +49,11 @@ void main() {
               'redirectUrl': 'someRedirectUrl',
               'discoveryUrl': 'someDiscoveryUrl',
               'loginHint': 'someLoginHint',
+
+              ///
+              /// NEW VAR(s)
+              ///
+              'state': 'abcdefg',
               'scopes': null,
               'serviceConfiguration': null,
               'additionalParameters': null,
@@ -69,6 +79,11 @@ void main() {
           discoveryUrl: 'someDiscoveryUrl',
           loginHint: 'someLoginHint',
           responseMode: 'fragment',
+
+          ///
+          /// NEW VAR(s)
+          ///
+          state: 'abcdefg',
         ),
       );
       expect(
@@ -82,6 +97,11 @@ void main() {
               'redirectUrl': 'someRedirectUrl',
               'discoveryUrl': 'someDiscoveryUrl',
               'loginHint': 'someLoginHint',
+
+              ///
+              /// NEW VAR(s)
+              ///
+              'state': 'abcdefg',
               'scopes': null,
               'serviceConfiguration': null,
               'additionalParameters': null,
