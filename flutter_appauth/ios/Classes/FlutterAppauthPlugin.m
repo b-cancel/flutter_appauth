@@ -146,7 +146,6 @@ AppAuthAuthorization* authorization;
         [requestParameters.additionalParameters setValue:[requestParameters.promptValues componentsJoinedByString:@" "] forKey:@"prompt"];
     }
     if(requestParameters.state){
-        [self ensureAdditionalParametersInitialized:requestParameters];
         [requestParameters.additionalParameters setValue:requestParameters.state forKey:@"state"];
     }
     if(requestParameters.responseMode) {
