@@ -1,5 +1,5 @@
-import 'package:flutter_appauth_platform_interface/flutter_appauth_platform_interface.dart';
-import 'package:flutter_appauth_platform_interface/src/accepted_authorization_service_configuration_details.dart';
+import '/flutter_appauth_platform_interface.dart';
+import '/src/accepted_authorization_service_configuration_details.dart';
 
 class EndSessionRequest with AcceptedAuthorizationServiceConfigurationDetails {
   EndSessionRequest({

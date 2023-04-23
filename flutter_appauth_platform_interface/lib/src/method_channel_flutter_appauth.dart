@@ -1,7 +1,8 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_appauth_platform_interface/src/end_session_request.dart';
-import 'package:flutter_appauth_platform_interface/src/end_session_response.dart';
 
+// ignore: avoid_relative_lib_imports
+import '/src/end_session_request.dart';
+import '/src/end_session_response.dart';
 import 'authorization_request.dart';
 import 'authorization_response.dart';
 import 'authorization_token_request.dart';

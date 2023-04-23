@@ -10,7 +10,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_appauth_platform_interface: ^5.2.0
+  # flutter_appauth_platform_interface: ^5.2.0
+
+  flutter_appauth_platform_interface:
+    git:
+      url: https://github.com/b-cancel/flutter_appauth.git
+      path: flutter_appauth_platform_interface
+      
 
 flutter:
   plugin:
