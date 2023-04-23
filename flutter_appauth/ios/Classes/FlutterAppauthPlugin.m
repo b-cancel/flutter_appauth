@@ -61,6 +61,7 @@
 @property(nonatomic, strong) NSString *loginHint;
 @property(nonatomic, strong) NSArray *promptValues;
 @property(nonatomic, strong) NSString *responseMode;
+@property(nonatomic, strong) NSString *state;
 @end
 
 @implementation AuthorizationTokenRequestParameters
@@ -69,6 +70,7 @@
     _loginHint = [ArgumentProcessor processArgumentValue:arguments withKey:@"loginHint"];
     _promptValues = [ArgumentProcessor processArgumentValue:arguments withKey:@"promptValues"];
     _responseMode = [ArgumentProcessor processArgumentValue:arguments withKey:@"responseMode"];
+    _state = [ArgumentProcessor processArgumentValue:arguments withKey:@"state"];
     return self;
 }
 @end
@@ -142,6 +144,10 @@ AppAuthAuthorization* authorization;
     }
     if(requestParameters.promptValues) {
         [requestParameters.additionalParameters setValue:[requestParameters.promptValues componentsJoinedByString:@" "] forKey:@"prompt"];
+    }
+    if(requestParameters.state){
+        [self ensureAdditionalParametersInitialized:requestParameters];
+        [requestParameters.additionalParameters setValue:requestParameters.state forKey:@"state"];
     }
     if(requestParameters.responseMode) {
         [requestParameters.additionalParameters setValue:requestParameters.responseMode forKey:@"response_mode"];
