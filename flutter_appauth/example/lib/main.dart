@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:http/http.dart' as http;
@@ -101,7 +102,8 @@ class _MyAppState extends State<MyApp> {
                         textAlign: TextAlign.center,
                       ),
                       onPressed: () => _signInWithAutoCodeExchange(
-                          preferEphemeralSession: true),
+                        preferEphemeralSession: true,
+                      ),
                     ),
                   ),
                 ElevatedButton(
@@ -151,10 +153,13 @@ class _MyAppState extends State<MyApp> {
   Future<void> _endSession() async {
     try {
       _setBusyState();
-      await _appAuth.endSession(EndSessionRequest(
+      await _appAuth.endSession(
+        EndSessionRequest(
           idTokenHint: _idToken,
           postLogoutRedirectUrl: _postLogoutRedirectUrl,
-          serviceConfiguration: _serviceConfiguration));
+          serviceConfiguration: _serviceConfiguration,
+        ),
+      );
       _clearSessionInfo();
     } catch (_) {}
     _clearBusyState();
@@ -180,9 +185,15 @@ class _MyAppState extends State<MyApp> {
   Future<void> _refresh() async {
     try {
       _setBusyState();
-      final TokenResponse? result = await _appAuth.token(TokenRequest(
-          _clientId, _redirectUrl,
-          refreshToken: _refreshToken, issuer: _issuer, scopes: _scopes));
+      final TokenResponse? result = await _appAuth.token(
+        TokenRequest(
+          _clientId,
+          _redirectUrl,
+          refreshToken: _refreshToken,
+          issuer: _issuer,
+          scopes: _scopes,
+        ),
+      );
       _processTokenResponse(result);
       await _testApi(result);
     } catch (_) {
@@ -193,13 +204,17 @@ class _MyAppState extends State<MyApp> {
   Future<void> _exchangeCode() async {
     try {
       _setBusyState();
-      final TokenResponse? result = await _appAuth.token(TokenRequest(
-          _clientId, _redirectUrl,
+      final TokenResponse? result = await _appAuth.token(
+        TokenRequest(
+          _clientId,
+          _redirectUrl,
           authorizationCode: _authorizationCode,
           discoveryUrl: _discoveryUrl,
           codeVerifier: _codeVerifier,
           nonce: _nonce,
-          scopes: _scopes));
+          scopes: _scopes,
+        ),
+      );
       _processTokenResponse(result);
       await _testApi(result);
     } catch (_) {
@@ -222,8 +237,13 @@ class _MyAppState extends State<MyApp> {
         https://www.rfc-editor.org/rfc/rfc7636 page 9 section 4.5.
       */
       final AuthorizationResponse? result = await _appAuth.authorize(
-        AuthorizationRequest(_clientId, _redirectUrl,
-            discoveryUrl: _discoveryUrl, scopes: _scopes, loginHint: 'bob'),
+        AuthorizationRequest(
+          _clientId,
+          _redirectUrl,
+          discoveryUrl: _discoveryUrl,
+          scopes: _scopes,
+          loginHint: 'bob',
+        ),
       );
 
       /* 
@@ -250,15 +270,19 @@ class _MyAppState extends State<MyApp> {
     try {
       _setBusyState();
       final Random random = Random.secure();
-      final String nonce =
-          base64Url.encode(List<int>.generate(16, (_) => random.nextInt(256)));
+      final String nonce = base64Url.encode(
+        List<int>.generate(16, (_) => random.nextInt(256)),
+      );
       // use the discovery endpoint to find the configuration
       final AuthorizationResponse? result = await _appAuth.authorize(
-        AuthorizationRequest(_clientId, _redirectUrl,
-            discoveryUrl: _discoveryUrl,
-            scopes: _scopes,
-            loginHint: 'bob',
-            nonce: nonce),
+        AuthorizationRequest(
+          _clientId,
+          _redirectUrl,
+          discoveryUrl: _discoveryUrl,
+          scopes: _scopes,
+          loginHint: 'bob',
+          nonce: nonce,
+        ),
       );
 
       if (result != null) {
@@ -269,8 +293,9 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  Future<void> _signInWithAutoCodeExchange(
-      {bool preferEphemeralSession = false}) async {
+  Future<void> _signInWithAutoCodeExchange({
+    bool preferEphemeralSession = false,
+  }) async {
     try {
       _setBusyState();
 
@@ -363,8 +388,9 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _testApi(TokenResponse? response) async {
     final http.Response httpResponse = await http.get(
-        Uri.parse('https://demo.duendesoftware.com/api/test'),
-        headers: <String, String>{'Authorization': 'Bearer $_accessToken'});
+      Uri.parse('https://demo.duendesoftware.com/api/test'),
+      headers: <String, String>{'Authorization': 'Bearer $_accessToken'},
+    );
     setState(() {
       _userInfo = httpResponse.statusCode == 200 ? httpResponse.body : '';
       _isBusy = false;
