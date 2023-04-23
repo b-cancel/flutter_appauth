@@ -1,7 +1,10 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_appauth_platform_interface/flutter_appauth_platform_interface.dart';
-import 'package:flutter_appauth_platform_interface/src/method_channel_flutter_appauth.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+// ignore: avoid_relative_lib_imports
+import '../lib/flutter_appauth_platform_interface.dart';
+// ignore: avoid_relative_lib_imports
+import '../lib/src/method_channel_flutter_appauth.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
