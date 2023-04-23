@@ -3,8 +3,15 @@
 @implementation AppAuthIOSAuthorization
 
 - (id<OIDExternalUserAgentSession>) performAuthorization:(OIDServiceConfiguration *)serviceConfiguration clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret scopes:(NSArray *)scopes redirectUrl:(NSString*)redirectUrl additionalParameters:(NSDictionary *)additionalParameters preferEphemeralSession:(BOOL)preferEphemeralSession result:(FlutterResult)result exchangeCode:(BOOL)exchangeCode nonce:(NSString*)nonce{
-  NSString *codeVerifier = [OIDAuthorizationRequest generateCodeVerifier];
-  NSString *codeChallenge = [OIDAuthorizationRequest codeChallengeS256ForVerifier:codeVerifier];
+    /// additionalParameters of type NSDictionary* might contain overrides
+    NSString *passedState;
+    if(additionalParameters != nil) {
+        passedState = additionalParameters['state'];
+    }
+
+    /// generate code verifier and challenge
+    NSString *generatedCodeVerifier = [OIDAuthorizationRequest generateCodeVerifier];
+    NSString *generatedCodeChallenge = [OIDAuthorizationRequest codeChallengeS256ForVerifier:codeVerifier];
 
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
@@ -13,12 +20,12 @@
                                                    scope:[OIDScopeUtilities scopesWithArray:scopes]
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType:OIDResponseTypeCode
-                                                   state:[OIDAuthorizationRequest generateState]
+                                                   state: passedState != nill ? passedState : [OIDAuthorizationRequest generateState]
                                                    nonce: nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
-                                            codeVerifier:codeVerifier
-                                           codeChallenge:codeChallenge
-                                     codeChallengeMethod:OIDOAuthorizationRequestCodeChallengeMethodS256
-                                    additionalParameters:additionalParameters];
+                                            codeVerifier: generatedCodeVerifier
+                                           codeChallenge: generatedCodeChallenge
+                                     codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
+                                    additionalParameters: additionalParameters];
   UIViewController *rootViewController =
   [UIApplication sharedApplication].delegate.window.rootViewController;
   if(exchangeCode) {
