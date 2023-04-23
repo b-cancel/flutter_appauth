@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/services.dart';
 
 // ignore: avoid_relative_lib_imports
@@ -18,8 +20,12 @@ const MethodChannel _channel =
 class MethodChannelFlutterAppAuth extends FlutterAppAuthPlatform {
   @override
   Future<AuthorizationResponse?> authorize(AuthorizationRequest request) async {
-    final Map<dynamic, dynamic>? result =
-        await _channel.invokeMethod('authorize', request.toMap());
+    final Map<String, Object?> requestMap = request.toMap();
+    log('authorizeAndExchangeCode MAP before invokeMethod $requestMap');
+    final Map<dynamic, dynamic>? result = await _channel.invokeMethod(
+      'authorize',
+      requestMap,
+    );
     if (result == null) {
       return null;
     }
@@ -34,24 +40,31 @@ class MethodChannelFlutterAppAuth extends FlutterAppAuthPlatform {
 
   @override
   Future<AuthorizationTokenResponse?> authorizeAndExchangeCode(
-      AuthorizationTokenRequest request) async {
+    AuthorizationTokenRequest request,
+  ) async {
+    final Map<String, Object?> requestMap = request.toMap();
+    log('authorizeAndExchangeCode MAP before invokeMethod $requestMap');
     final Map<dynamic, dynamic>? result = await _channel.invokeMethod(
-        'authorizeAndExchangeCode', request.toMap());
+      'authorizeAndExchangeCode',
+      requestMap,
+    );
     if (result == null) {
       return null;
     }
     return AuthorizationTokenResponse(
-        result['accessToken'],
-        result['refreshToken'],
-        result['accessTokenExpirationTime'] == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(
-                result['accessTokenExpirationTime'].toInt()),
-        result['idToken'],
-        result['tokenType'],
-        result['scopes']?.cast<String>(),
-        result['authorizationAdditionalParameters']?.cast<String, dynamic>(),
-        result['tokenAdditionalParameters']?.cast<String, dynamic>());
+      result['accessToken'],
+      result['refreshToken'],
+      result['accessTokenExpirationTime'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              result['accessTokenExpirationTime'].toInt(),
+            ),
+      result['idToken'],
+      result['tokenType'],
+      result['scopes']?.cast<String>(),
+      result['authorizationAdditionalParameters']?.cast<String, dynamic>(),
+      result['tokenAdditionalParameters']?.cast<String, dynamic>(),
+    );
   }
 
   @override
@@ -62,16 +75,17 @@ class MethodChannelFlutterAppAuth extends FlutterAppAuthPlatform {
       return null;
     }
     return TokenResponse(
-        result['accessToken'],
-        result['refreshToken'],
-        result['accessTokenExpirationTime'] == null
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(
-                result['accessTokenExpirationTime'].toInt()),
-        result['idToken'],
-        result['tokenType'],
-        result['scopes']?.cast<String>(),
-        result['tokenAdditionalParameters']?.cast<String, dynamic>());
+      result['accessToken'],
+      result['refreshToken'],
+      result['accessTokenExpirationTime'] == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              result['accessTokenExpirationTime'].toInt()),
+      result['idToken'],
+      result['tokenType'],
+      result['scopes']?.cast<String>(),
+      result['tokenAdditionalParameters']?.cast<String, dynamic>(),
+    );
   }
 
   @override
