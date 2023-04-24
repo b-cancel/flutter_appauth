@@ -4,13 +4,13 @@
 
 - (id<OIDExternalUserAgentSession>) performAuthorization:(OIDServiceConfiguration *)serviceConfiguration clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret scopes:(NSArray *)scopes redirectUrl:(NSString*)redirectUrl additionalParameters:(NSDictionary *)additionalParameters preferEphemeralSession:(BOOL)preferEphemeralSession result:(FlutterResult)result exchangeCode:(BOOL)exchangeCode nonce:(NSString*)nonce{
     /// additionalParameters of type NSDictionary* might contain overrides
-    /*
+    
     NSString *passedState;
     if(additionalParameters != nil) {
         passedState = additionalParameters['state'];
     }
     [OIDAuthorizationRequest generateState]
-    */
+    
 
     /// generate code verifier and challenge
     NSString *generatedCodeVerifier = [OIDAuthorizationRequest generateCodeVerifier];
@@ -35,7 +35,7 @@
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                                 clientId:clientId
                                             clientSecret:clientSecret
-                                                   scope: nil
+                                                   scope: passedState != null ? passedState : [OIDAuthorizationRequest generateState]
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType: OIDResponseTypeCode
                                                    state: "AAArpFAM"
