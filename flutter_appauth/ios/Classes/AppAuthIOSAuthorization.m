@@ -8,9 +8,9 @@
     NSMutableDictionary *additional = [additionalParameters mutableCopy];
     NSString *theState = additional != nil ? additional[@"state"] : nil;
     if(theState != nil){
-        [additional removeObjectForKey:@"state"]
+        [additional removeObjectForKey:@"state"];
     } else {
-        theState = [OIDAuthorizationRequest generateState]
+        theState = [OIDAuthorizationRequest generateState];
     }
 
     /// generate code verifier and challenge
