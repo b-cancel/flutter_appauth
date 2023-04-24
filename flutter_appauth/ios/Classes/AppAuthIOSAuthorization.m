@@ -83,7 +83,7 @@ appDelegate.currentAuthorizationFlow =
     } else {
         /// typedef void(^ OIDAuthorizationCallback)                                                                    (OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error)
         return [OIDAuthorizationService presentAuthorizationRequest:request presentingViewController:self callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
-            if(authState) {
+            if(authorizationResponse) {
                 NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
                 [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
                 [processedResponse setObject:authorizationResponse.authorizationCode forKey:@"authorizationCode"];
