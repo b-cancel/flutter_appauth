@@ -41,6 +41,7 @@
                                         clientId:clientId
                                         clientSecret:clientSecret
                                         scope: nil
+                                        // or is it scope?
                                         redirectURL:[NSURL URLWithString:redirectUrl]
                                         responseType: OIDResponseTypeCode
                                         state: theState
@@ -51,10 +52,10 @@
                                         additionalParameters: additional];
 
     /// get the app delegate
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
                                     
     /// define the view that handles the request
-    UIViewController *rootViewController = appDelegate.window.rootViewController;
+    UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
 
     /// the external user agent
     id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
