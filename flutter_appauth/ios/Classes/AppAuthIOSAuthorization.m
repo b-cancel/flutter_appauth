@@ -6,7 +6,7 @@
     /// additionalParameters of type NSDictionary* might contain overrides
     
     
-    // NSString *passedState = additionalParameters != nil ? passedState = additionalParameters['state'] : [OIDAuthorizationRequest generateState];
+    NSString *theState = additionalParameters != nil ? additionalParameters['state'] : [OIDAuthorizationRequest generateState];
     
 
     /// generate code verifier and challenge
@@ -34,7 +34,7 @@
                                                    scope:[OIDScopeUtilities scopesWithArray:scopes]
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType: OIDResponseTypeCode
-                                                   state: "testingathing"
+                                                   state: theState
                                                    nonce: nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
                                             codeVerifier: generatedCodeVerifier
                                            codeChallenge: generatedCodeChallenge
