@@ -31,6 +31,8 @@
     /// additionalParameters:
     /// passedState != nil ? passedState : [OIDAuthorizationRequest generateState]
 
+    /// nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
+
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                                 clientId:clientId
@@ -39,7 +41,7 @@
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType: OIDResponseTypeCode
                                                    state: theState
-                                                   nonce: nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
+                                                   nonce: nil
                                             codeVerifier: generatedCodeVerifier
                                            codeChallenge: generatedCodeChallenge
                                      codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
