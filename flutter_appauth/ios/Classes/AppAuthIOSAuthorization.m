@@ -5,14 +5,13 @@
 - (id<OIDExternalUserAgentSession>) performAuthorization:(OIDServiceConfiguration *)serviceConfiguration clientId:(NSString*)clientId clientSecret:(NSString*)clientSecret scopes:(NSArray *)scopes redirectUrl:(NSString*)redirectUrl additionalParameters:(NSDictionary *)additionalParameters preferEphemeralSession:(BOOL)preferEphemeralSession result:(FlutterResult)result exchangeCode:(BOOL)exchangeCode nonce:(NSString*)nonce{
     /// additionalParameters of type NSDictionary* might contain overrides
     
-    
-    NSString *theState = additionalParameters != nil ? additionalParameters[@"state"] : nil;
+    NSMutableDictionary *additional = [additionalParameters mutableCopy];
+    NSString *theState = additional != nil ? additional[@"state"] : nil;
     if(theState != nil){
-        [additionalParameters removeObjectForKey:@"state"]
+        [additional removeObjectForKey:@"state"]
     } else {
         theState = [OIDAuthorizationRequest generateState]
     }
-    
 
     /// generate code verifier and challenge
     NSString *generatedCodeVerifier = [OIDAuthorizationRequest generateCodeVerifier];
@@ -44,7 +43,7 @@
                                             codeVerifier: generatedCodeVerifier
                                            codeChallenge: generatedCodeChallenge
                                      codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
-                                    additionalParameters: additionalParameters];
+                                    additionalParameters: additional];
   UIViewController *rootViewController =
   [UIApplication sharedApplication].delegate.window.rootViewController;
   if(exchangeCode) {
