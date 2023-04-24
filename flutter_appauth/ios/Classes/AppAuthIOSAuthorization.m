@@ -33,47 +33,67 @@
 
     /// [OIDScopeUtilities scopesWithArray:scopes]
     /// nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
+    /// scopes:@[OIDScopeOpenID,OIDScopeProfile]
 
-  OIDAuthorizationRequest *request =
-  [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
-                                                clientId:clientId
-                                            clientSecret:clientSecret
-                                                   scope: nil
-                                             redirectURL:[NSURL URLWithString:redirectUrl]
-                                            responseType: OIDResponseTypeCode
-                                                   state: theState
-                                                   nonce: nil
-                                            codeVerifier: generatedCodeVerifier
-                                           codeChallenge: generatedCodeChallenge
-                                     codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
-                                    additionalParameters: additional];
-  UIViewController *rootViewController =
-  [UIApplication sharedApplication].delegate.window.rootViewController;
+    /// define the request
+    OIDAuthorizationRequest *request = 
+    [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
+                                        clientId:clientId
+                                        clientSecret:clientSecret
+                                        scopes: nil
+                                        // or is it scope?
+                                        redirectURL:[NSURL URLWithString:redirectUrl]
+                                        responseType: OIDResponseTypeCode
+                                        state: theState
+                                        nonce: nil
+                                        codeVerifier: generatedCodeVerifier
+                                        codeChallenge: generatedCodeChallenge
+                                        codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
+                                        additionalParameters: additional];
+
+    /// get the app delegate
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+                                    
+    /// define the view that handles the request
+    UIViewController *rootViewController = appDelegate.window.rootViewController;
+
+    /// the external user agent
     id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
 
-  if(exchangeCode) {
-        /// typedef void(^ OIDAuthStateAuthorizationCallback)                                                              (OIDAuthState *_Nullable authState, NSError *_Nullable error)
-      return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
-          if(error != nil) {
-            [FlutterAppAuth finishWithError:AUTHORIZE_AND_EXCHANGE_CODE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
-          } else {
-            result([FlutterAppAuth processResponses:authState.lastTokenResponse authResponse:authState.lastAuthorizationResponse]);
-          }
-      }];
-  } else {
+    /*
+    AppDelegate *appDelegate =
+    (AppDelegate *)[UIApplication sharedApplication].delegate;
+appDelegate.currentAuthorizationFlow =
+    [OIDAuthState authStateByPresentingAuthorizationRequest:request
+        presentingViewController:self
+                        
+    */
+
+    /// extra step if we need to exachange code
+    if(exchangeCode) {
+        ///                                                                                                        callback:^(OIDAuthState *_Nullable authState ,NSError *_Nullable error)
+        /// typedef void(^ OIDAuthStateAuthorizationCallback)                                                                (OIDAuthState *_Nullable authState, NSError *_Nullable error)
+        return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
+            if(authState) {
+                result([FlutterAppAuth processResponses:authState.lastTokenResponse authResponse:authState.lastAuthorizationResponse]);
+            } else {
+                [FlutterAppAuth finishWithError:AUTHORIZE_AND_EXCHANGE_CODE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
+            }
+        }];
+    } else {
         /// typedef void(^ OIDAuthorizationCallback)                                                                    (OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error)
-      return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
-          if(error != nil) {
-            [FlutterAppAuth finishWithError:AUTHORIZE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
-          } else {
-            NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
-            [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
-            [processedResponse setObject:authorizationResponse.authorizationCode forKey:@"authorizationCode"];
-            [processedResponse setObject:authorizationResponse.request.codeVerifier forKey:@"codeVerifier"];
-            [processedResponse setObject:authorizationResponse.request.nonce forKey:@"nonce"];
-            result(processedResponse);
-          }
-      }];
+        return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
+            if(authState) {
+                NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
+                [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
+                [processedResponse setObject:authorizationResponse.authorizationCode forKey:@"authorizationCode"];
+                [processedResponse setObject:authorizationResponse.request.codeVerifier forKey:@"codeVerifier"];
+                [processedResponse setObject:authorizationResponse.request.nonce forKey:@"nonce"];
+                result(processedResponse);
+            } else {
+                [FlutterAppAuth finishWithError:AUTHORIZE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
+            }
+        }];
   }
 }
 
