@@ -52,7 +52,7 @@
                                         additionalParameters: additional];
 
     /// get the app delegate
-    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    /// AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
                                     
     /// define the view that handles the request
     UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
@@ -73,7 +73,7 @@ appDelegate.currentAuthorizationFlow =
     if(exchangeCode) {
         ///                                                                                                        callback:^(OIDAuthState *_Nullable authState ,NSError *_Nullable error)
         /// typedef void(^ OIDAuthStateAuthorizationCallback)                                                                (OIDAuthState *_Nullable authState, NSError *_Nullable error)
-        return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
+        return [OIDAuthState authStateByPresentingAuthorizationRequest:request presentingViewController:self callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
             if(authState) {
                 result([FlutterAppAuth processResponses:authState.lastTokenResponse authResponse:authState.lastAuthorizationResponse]);
             } else {
@@ -82,7 +82,7 @@ appDelegate.currentAuthorizationFlow =
         }];
     } else {
         /// typedef void(^ OIDAuthorizationCallback)                                                                    (OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error)
-        return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
+        return [OIDAuthorizationService presentAuthorizationRequest:request presentingViewController:self callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
             if(authState) {
                 NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
                 [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
