@@ -40,8 +40,7 @@
     [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                         clientId:clientId
                                         clientSecret:clientSecret
-                                        scopes: nil
-                                        // or is it scope?
+                                        scope: nil
                                         redirectURL:[NSURL URLWithString:redirectUrl]
                                         responseType: OIDResponseTypeCode
                                         state: theState
