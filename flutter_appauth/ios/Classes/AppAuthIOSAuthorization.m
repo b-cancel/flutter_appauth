@@ -31,13 +31,14 @@
     /// additionalParameters:
     /// passedState != nil ? passedState : [OIDAuthorizationRequest generateState]
 
+    /// [OIDScopeUtilities scopesWithArray:scopes]
     /// nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
 
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                                 clientId:clientId
                                             clientSecret:clientSecret
-                                                   scope:[OIDScopeUtilities scopesWithArray:scopes]
+                                                   scope: nil
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType: OIDResponseTypeCode
                                                    state: theState
