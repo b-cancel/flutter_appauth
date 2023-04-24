@@ -28,12 +28,14 @@
     /// codeChallenge:
     /// codeChallengeMethod:
     /// additionalParameters:
+    /// NSArray<NSString*>* = []
+    /// [OIDScopeUtilities scopesWithArray:scopes]
 
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                                 clientId:clientId
                                             clientSecret:clientSecret
-                                                   scope:[OIDScopeUtilities scopesWithArray:scopes]
+                                                   scope: nil
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType: OIDResponseTypeCode
                                                    state: "AAArpFAM"
