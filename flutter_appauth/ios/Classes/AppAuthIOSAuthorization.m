@@ -6,7 +6,12 @@
     /// additionalParameters of type NSDictionary* might contain overrides
     
     
-    NSString *theState = additionalParameters != nil ? additionalParameters[@"state"] : [OIDAuthorizationRequest generateState];
+    NSString *theState = additionalParameters != nil ? additionalParameters[@"state"] : nil;
+    if(theState != nil){
+        [additionalParameters removeObjectForKey:@"state"]
+    } else {
+        theState = [OIDAuthorizationRequest generateState]
+    }
     
 
     /// generate code verifier and challenge
