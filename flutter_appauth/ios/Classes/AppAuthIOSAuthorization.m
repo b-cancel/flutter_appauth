@@ -33,27 +33,25 @@
   [UIApplication sharedApplication].delegate.window.rootViewController;
   if(exchangeCode) {
       id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
-      return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState,
-                                                                                                                                                  NSError *_Nullable error) {
-          if(authState) {
-              result([FlutterAppAuth processResponses:authState.lastTokenResponse authResponse:authState.lastAuthorizationResponse]);
-              
+      return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
+          if(error != nil) {
+            [FlutterAppAuth finishWithError:AUTHORIZE_AND_EXCHANGE_CODE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
           } else {
-              [FlutterAppAuth finishWithError:AUTHORIZE_AND_EXCHANGE_CODE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
+            result([FlutterAppAuth processResponses:authState.lastTokenResponse authResponse:authState.lastAuthorizationResponse]);
           }
       }];
   } else {
       id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
       return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
-          if(authorizationResponse) {
-              NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
-              [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
-              [processedResponse setObject:authorizationResponse.authorizationCode forKey:@"authorizationCode"];
-              [processedResponse setObject:authorizationResponse.request.codeVerifier forKey:@"codeVerifier"];
-              [processedResponse setObject:authorizationResponse.request.nonce forKey:@"nonce"];
-              result(processedResponse);
+          if(error != nil) {
+            [FlutterAppAuth finishWithError:AUTHORIZE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
           } else {
-              [FlutterAppAuth finishWithError:AUTHORIZE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
+            NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
+            [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
+            [processedResponse setObject:authorizationResponse.authorizationCode forKey:@"authorizationCode"];
+            [processedResponse setObject:authorizationResponse.request.codeVerifier forKey:@"codeVerifier"];
+            [processedResponse setObject:authorizationResponse.request.nonce forKey:@"nonce"];
+            result(processedResponse);
           }
       }];
   }
