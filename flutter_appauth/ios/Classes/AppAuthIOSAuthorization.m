@@ -49,8 +49,10 @@
                                     additionalParameters: additional];
   UIViewController *rootViewController =
   [UIApplication sharedApplication].delegate.window.rootViewController;
+    id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
+
   if(exchangeCode) {
-      id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
+        /// typedef void(^ OIDAuthStateAuthorizationCallback)                                                              (OIDAuthState *_Nullable authState, NSError *_Nullable error)
       return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
           if(error != nil) {
             [FlutterAppAuth finishWithError:AUTHORIZE_AND_EXCHANGE_CODE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];
@@ -59,7 +61,7 @@
           }
       }];
   } else {
-      id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
+        /// typedef void(^ OIDAuthorizationCallback)                                                                    (OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error)
       return [OIDAuthorizationService presentAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
           if(error != nil) {
             [FlutterAppAuth finishWithError:AUTHORIZE_ERROR_CODE message:[FlutterAppAuth formatMessageWithError:AUTHORIZE_ERROR_MESSAGE_FORMAT error:error] result:result];

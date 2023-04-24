@@ -154,7 +154,7 @@ AppAuthAuthorization* authorization;
 
     if(requestParameters.serviceConfigurationParameters != nil) {
         OIDServiceConfiguration *serviceConfiguration = [self processServiceConfigurationParameters:requestParameters.serviceConfigurationParameters];
-        _currentAuthorizationFlow = [authorization performAuthorization:serviceConfiguration clientId:requestParameters.clientId clientSecret:requestParameters.clientSecret scopes:requestParameters.scopes redirectUrl:requestParameters.redirectUrl additionalParameters:requestParameters.additionalParameters preferEphemeralSession:requestParameters.preferEphemeralSession result:result exchangeCode:exchangeCode nonce:requestParameters.nonce];
+        self->_currentAuthorizationFlow = [authorization performAuthorization:serviceConfiguration clientId:requestParameters.clientId clientSecret:requestParameters.clientSecret scopes:requestParameters.scopes redirectUrl:requestParameters.redirectUrl additionalParameters:requestParameters.additionalParameters preferEphemeralSession:requestParameters.preferEphemeralSession result:result exchangeCode:exchangeCode nonce:requestParameters.nonce];
     } else if (requestParameters.discoveryUrl) {
         NSURL *discoveryUrl = [NSURL URLWithString:requestParameters.discoveryUrl];
         [OIDAuthorizationService discoverServiceConfigurationForDiscoveryURL:discoveryUrl
@@ -236,7 +236,7 @@ AppAuthAuthorization* authorization;
     EndSessionRequestParameters *requestParameters = [[EndSessionRequestParameters alloc] initWithArguments:arguments];
     if(requestParameters.serviceConfigurationParameters != nil) {
         OIDServiceConfiguration *serviceConfiguration = [self processServiceConfigurationParameters:requestParameters.serviceConfigurationParameters];
-        _currentAuthorizationFlow = [authorization performEndSessionRequest:serviceConfiguration requestParameters:requestParameters result:result];
+        self->_currentAuthorizationFlow = [authorization performEndSessionRequest:serviceConfiguration requestParameters:requestParameters result:result];
     } else if (requestParameters.discoveryUrl) {
         NSURL *discoveryUrl = [NSURL URLWithString:requestParameters.discoveryUrl];
         
