@@ -28,18 +28,16 @@
     /// codeChallenge:
     /// codeChallengeMethod:
     /// additionalParameters:
-    /// NSArray<NSString*>* = []
-    /// [OIDScopeUtilities scopesWithArray:scopes]
 
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                                 clientId:clientId
                                             clientSecret:clientSecret
-                                                   scope: passedState != null ? passedState : [OIDAuthorizationRequest generateState]
+                                                   scope:[OIDScopeUtilities scopesWithArray:scopes]
                                              redirectURL:[NSURL URLWithString:redirectUrl]
-                                            responseType: OIDResponseTypeCode
-                                                   state: "AAArpFAM"
-                                                   nonce: nonce != nil ? nonce : "nonceyNonceyNoncey"
+                                            responseType:OIDResponseTypeCode
+                                                   state: passedState != nil ? passedState : [OIDAuthorizationRequest generateState]
+                                                   nonce: nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
                                             codeVerifier: generatedCodeVerifier
                                            codeChallenge: generatedCodeChallenge
                                      codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
