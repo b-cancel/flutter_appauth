@@ -14,7 +14,7 @@
 
     /// generate code verifier and challenge
     NSString *generatedCodeVerifier = [OIDAuthorizationRequest generateCodeVerifier];
-    NSString *generatedCodeChallenge = [OIDAuthorizationRequest codeChallengeS256ForVerifier:codeVerifier];
+    NSString *generatedCodeChallenge = [OIDAuthorizationRequest codeChallengeS256ForVerifier:generatedCodeVerifier];
 
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
