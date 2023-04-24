@@ -16,6 +16,19 @@
     NSString *generatedCodeVerifier = [OIDAuthorizationRequest generateCodeVerifier];
     NSString *generatedCodeChallenge = [OIDAuthorizationRequest codeChallengeS256ForVerifier:generatedCodeVerifier];
 
+    /// initWithConfiguration:
+    /// clientId:
+    /// clientSecret:
+    /// scope:
+    /// redirectURL:
+    /// responseType:
+    /// state:
+    /// nonce: [OIDAuthorizationRequest generateState]
+    /// codeVerifier:
+    /// codeChallenge:
+    /// codeChallengeMethod:
+    /// additionalParameters:
+
   OIDAuthorizationRequest *request =
   [[OIDAuthorizationRequest alloc] initWithConfiguration:serviceConfiguration
                                                 clientId:clientId
@@ -24,7 +37,7 @@
                                              redirectURL:[NSURL URLWithString:redirectUrl]
                                             responseType: OIDResponseTypeCode
                                                    state: "AAArpFAM"
-                                                   nonce: nonce != nil ? nonce : [OIDAuthorizationRequest generateState]
+                                                   nonce: nonce != nil ? nonce : "nonceyNonceyNoncey"
                                             codeVerifier: generatedCodeVerifier
                                            codeChallenge: generatedCodeChallenge
                                      codeChallengeMethod: OIDOAuthorizationRequestCodeChallengeMethodS256
