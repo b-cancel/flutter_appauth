@@ -73,7 +73,8 @@ appDelegate.currentAuthorizationFlow =
     if(exchangeCode) {
         ///                                                                                                        callback:^(OIDAuthState *_Nullable authState ,NSError *_Nullable error)
         /// typedef void(^ OIDAuthStateAuthorizationCallback)                                                                (OIDAuthState *_Nullable authState, NSError *_Nullable error)
-        return [OIDAuthState authStateByPresentingAuthorizationRequest:request presentingViewController:self callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
+        /// presentingViewController is of type UIViewController
+        return [OIDAuthState authStateByPresentingAuthorizationRequest:request presentingViewController:rootViewController callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
             if(authState) {
                 result([FlutterAppAuth processResponses:authState.lastTokenResponse authResponse:authState.lastAuthorizationResponse]);
             } else {
@@ -82,7 +83,7 @@ appDelegate.currentAuthorizationFlow =
         }];
     } else {
         /// typedef void(^ OIDAuthorizationCallback)                                                                    (OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error)
-        return [OIDAuthorizationService presentAuthorizationRequest:request presentingViewController:self callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
+        return [OIDAuthorizationService presentAuthorizationRequest:request presentingViewController:rootViewController callback:^(OIDAuthorizationResponse *_Nullable authorizationResponse, NSError *_Nullable error) {
             if(authorizationResponse) {
                 NSMutableDictionary *processedResponse = [[NSMutableDictionary alloc] init];
                 [processedResponse setObject:authorizationResponse.additionalParameters forKey:@"authorizationAdditionalParameters"];
