@@ -46,7 +46,7 @@
                                     additionalParameters: additional];
   UIViewController *rootViewController =
   [UIApplication sharedApplication].delegate.window.rootViewController;
-  if(exchangeCode) {
+  if(exchangeCode == false) {
       id<OIDExternalUserAgent> externalUserAgent = [self userAgentWithViewController:rootViewController useEphemeralSession:preferEphemeralSession];
       return [OIDAuthState authStateByPresentingAuthorizationRequest:request externalUserAgent:externalUserAgent callback:^(OIDAuthState *_Nullable authState, NSError *_Nullable error) {
           if(error != nil) {
